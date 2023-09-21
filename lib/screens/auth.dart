@@ -22,25 +22,29 @@ class _AuthScreenState extends State<AuthScreen> {
     if (!isValid) return;
 
     _form.currentState!.save();
-
-    if (_isLogin) {
-      // TODO: add login logic
-    } else {
-      try {
+    try {
+      if (_isLogin) {
+        final userCredentials = await _firebase.signInWithEmailAndPassword(
+          email: _enteredEmail,
+          password: _enteredPassword,
+        );
+      } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
           email: _enteredEmail,
           password: _enteredPassword,
         );
-      } on FirebaseAuthException catch (error) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            padding: const EdgeInsets.all(10),
-            content: Text(error.message ?? 'Signup failed.'),
-            backgroundColor: Colors.red,
-          ),
-        );
       }
+    } on FirebaseAuthException catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          padding: const EdgeInsets.all(10),
+          content: Text(
+            error.message ?? (_isLogin ? 'Login failed.' : 'Singup failed.'),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
