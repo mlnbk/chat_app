@@ -182,7 +182,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                       .primaryContainer),
                               child: Text(_isLogin ? 'Login' : 'Sign up'),
                             ),
-                          if (_isAuthenticating)
+                          if (!_isAuthenticating)
                             TextButton(
                               onPressed: () {
                                 setState(() {
